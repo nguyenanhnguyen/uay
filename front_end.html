@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Christmas Theme</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #2e8b57 0%, #006400 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-top: 40px;
+            text-shadow: 2px 2px 8px #b22222;
+        }
+        .tree {
+            margin: 40px auto;
+            width: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 120px solid #228B22;
+            height: 0;
+            position: relative;
+        }
+        .tree:before, .tree:after {
+            content: '';
+            position: absolute;
+            left: -80px;
+            width: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+        }
+        .tree:before {
+            top: -70px;
+            border-bottom: 100px solid #2e8b57;
+        }
+        .tree:after {
+            top: -130px;
+            border-bottom: 80px solid #3cb371;
+        }
+        .trunk {
+            width: 30px;
+            height: 40px;
+            background: #8b5a2b;
+            margin: 0 auto;
+            border-radius: 5px;
+            margin-top: -10px;
+        }
+        .ornament {
+            position: absolute;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            background: red;
+            box-shadow: 0 0 8px 2px #fff8dc;
+        }
+        .ornament1 { top: -110px; left: 30px; background: #ff0000; }
+        .ornament2 { top: -80px; left: 90px; background: #ffd700; }
+        .ornament3 { top: -40px; left: 60px; background: #00bfff; }
+        .ornament4 { top: -60px; left: -30px; background: #ff69b4; }
+        .ornament5 { top: -20px; left: -60px; background: #00ff00; }
+        .star {
+            position: absolute;
+            top: -150px;
+            left: 62px;
+            width: 36px;
+            height: 36px;
+            background: none;
+            clip-path: polygon(
+                50% 0%, 61% 35%, 98% 35%, 68% 57%,
+                79% 91%, 50% 70%, 21% 91%, 32% 57%,
+                2% 35%, 39% 35%
+            );
+            background: #ffd700;
+            box-shadow: 0 0 16px 4px #fff8dc;
+        }
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <h1>Merry Christmas!</h1>
+    <div style="position:relative; width:160px; margin:auto;">
+        <div class="tree">
+            <div class="star"></div>
+            <div class="ornament ornament1"></div>
+            <div class="ornament ornament2"></div>
+            <div class="ornament ornament3"></div>
+            <div class="ornament ornament4"></div>
+            <div class="ornament ornament5"></div>
+        </div>
+        <div class="trunk"></div>
+    </div>
+    <canvas class="snow"></canvas>
+    <script>
+        // Simple snow effect
+        const canvas = document.querySelector('.snow');
+        const ctx = canvas.getContext('2d');
+        let W = window.innerWidth, H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+        let mf = 100; // max flakes
+        let flakes = [];
+        for(let i = 0; i < mf; i++) {
+            flakes.push({
+                x: Math.random()*W,
+                y: Math.random()*H,
+                r: Math.random()*3+2,
+                d: Math.random()+1
+            });
+        }
+        function drawFlakes() {
+            ctx.clearRect(0,0,W,H);
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            for(let i = 0; i < mf; i++) {
+                let f = flakes[i];
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI*2, true);
+            }
+            ctx.fill();
+            moveFlakes();
+        }
+        let angle = 0;
+        function moveFlakes() {
+            angle += 0.01;
+            for(let i = 0; i < mf; i++) {
+                let f = flakes[i];
+                f.y += Math.pow(f.d, 2) + 1;
+                f.x += Math.sin(angle) * 2;
+                if(f.y > H) {
+                    flakes[i] = {x: Math.random()*W, y: 0, r: f.r, d: f.d};
+                }
+            }
+        }
+        setInterval(drawFlakes, 33);
+        window.addEventListener('resize', () => {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
+        });
+    </script>
+</body>
+</html>
